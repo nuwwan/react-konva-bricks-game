@@ -1,15 +1,15 @@
 import React, { useEffect } from "react";
 import { useBoard } from "../hooks/UseBoard";
-import { Stage, Layer, Rect, Text} from "react-konva";
+import { Stage, Layer, Rect } from "react-konva";
 import { BOARD_HEIGHT, BOARD_WIDTH, CELL_SIZE } from "../config/app.config";
 import { Cell } from "../types";
 
 const Board: React.FC = () => {
   const { cells } = useBoard();
 
-  useEffect(()=>{
-    console.log(cells)
-  })
+  useEffect(() => {
+    console.log(cells);
+  });
   return (
     <>
       <div>
@@ -18,9 +18,19 @@ const Board: React.FC = () => {
           height={BOARD_HEIGHT * CELL_SIZE}
         >
           <Layer>
-            {
-            cells.map((row: Cell[], idY: number) =><>{row.map((cell:Cell,idX:number)=><Rect x={idX*CELL_SIZE} y={idY*CELL_SIZE} height={CELL_SIZE} width={CELL_SIZE} stroke="black"/>)}</>)
-            }
+            {cells.map((row: Cell[], idY: number) => (
+              <>
+                {row.map((cell: Cell, idX: number) => (
+                  <Rect
+                    x={idX * CELL_SIZE}
+                    y={idY * CELL_SIZE}
+                    height={CELL_SIZE}
+                    width={CELL_SIZE}
+                    stroke="black"
+                  />
+                ))}
+              </>
+            ))}
           </Layer>
         </Stage>
       </div>
@@ -29,14 +39,3 @@ const Board: React.FC = () => {
 };
 
 export default Board;
-
-// row.map((cell: Cell, idX: number) => (
-//     <Rect
-//       x={idX * CELL_SIZE}
-//       y={idY * CELL_SIZE}
-//       height={CELL_SIZE}
-//       width={CELL_SIZE}
-//       stroke="black"
-//       fill="red"
-//     />
-//   ))
