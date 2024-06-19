@@ -4,12 +4,12 @@ import Score from "../components/Score";
 const GamePage: React.FC = () => {
   return (
     <div>
-      <div style={{ display: "flex", width: 1000, margin: "auto" }}>
+      <div style={{ width: 1000, margin: "auto" }}>
         <div>
-          <Board />
+          <Score score={0}/>
         </div>
         <div>
-          <Score />
+          <Board />
         </div>
       </div>
     </div>

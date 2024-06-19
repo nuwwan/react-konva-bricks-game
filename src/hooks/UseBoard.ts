@@ -2,7 +2,7 @@ import { BOARD_HEIGHT, BOARD_WIDTH } from "../config/app.config";
 import { BoardState, Cell } from "../types";
 
 export function useBoard(): BoardState {
-  const emptyCell: Cell = { value: 0, shape: null };
+  const emptyCell: Cell = { shape: null };
 
   const constructEmptyBoard = (): Cell[][] => {
     const cells = Array(BOARD_HEIGHT)
