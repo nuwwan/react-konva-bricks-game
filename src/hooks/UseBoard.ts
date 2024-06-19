@@ -4,7 +4,7 @@ import {
   TETROMINO_ENTER_COL,
   TETROMINO_ENTER_ROW,
 } from "../config/app.config";
-import { BoardState, Cell, CellTypes } from "../types";
+import { BoardState, Cell, CellType } from "../types";
 
 export function useBoard(): BoardState {
   const emptyCell: Cell = { shape: null };
@@ -18,7 +18,7 @@ export function useBoard(): BoardState {
 
   return {
     cells: constructEmptyBoard(),
-    tetromino: CellTypes.I,
+    tetromino: CellType.I,
     tetrominoCol: TETROMINO_ENTER_COL,
     tetrominoRow: TETROMINO_ENTER_ROW,
   };

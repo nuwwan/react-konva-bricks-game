@@ -1,4 +1,4 @@
-export enum CellTypes {
+export enum CellType {
   I = "I",
   L = "L",
   O = "O",
@@ -9,14 +9,14 @@ export enum CellTypes {
 // Cell type can be either null or any CellType.
 // Color of the cell will be decided based on the CellType
 export type Cell = {
-  shape: CellTypes | null;
+  shape: CellType | null;
 };
 
 // Board type
 // Board has Shape which is moving
 export type BoardState = {
   cells: Cell[][];
-  tetromino: CellTypes;
+  tetromino: CellType;
   tetrominoCol: number;
   tetrominoRow: number;
 };
@@ -26,7 +26,7 @@ export type Shape = {
 };
 
 export type ShapeObj = {
-  [key in CellTypes]: Shape;
+  [key in CellType]: Shape;
 };
 
 export const Shapes: ShapeObj = {
@@ -59,3 +59,13 @@ export const Shapes: ShapeObj = {
     ],
   },
 };
+
+export enum Action {
+  start = "START",
+  commit = "COMMIT",
+  drop = "DROP",
+  moveLeft = "LEFT",
+  moveRight = "RIGHT",
+  moveDown = "DOWN",
+  rotate = "ROTATE",
+}

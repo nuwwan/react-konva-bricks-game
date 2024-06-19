@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
-import { useBoard } from "../hooks/UseBoard";
 import { Stage, Layer, Rect } from "react-konva";
 import { BOARD_HEIGHT, BOARD_WIDTH, CELL_SIZE } from "../config/app.config";
 import { Cell } from "../types";
+import { useBoard } from "../hooks/UseBoard";
 
 const Board: React.FC = () => {
   const { cells } = useBoard();
