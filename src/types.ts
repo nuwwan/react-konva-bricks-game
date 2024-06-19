@@ -16,6 +16,9 @@ export type Cell = {
 // Board has Shape which is moving
 export type BoardState = {
   cells: Cell[][];
+  tetromino: CellTypes;
+  tetrominoCol: number;
+  tetrominoRow: number;
 };
 
 export type Shape = {
