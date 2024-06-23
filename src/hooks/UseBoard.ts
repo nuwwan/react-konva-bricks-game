@@ -9,7 +9,7 @@ type TatrisBoard = BoardState & {
 export function useBoard(): TatrisBoard {
   const [score, setScore] = useState<number>(0);
   const [isCommiting, setIsCommiting] = useState<boolean>(false);
-  const [isGameStarted, setIsGameStarted] = useState<boolean>(false);
+  const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [tetromino, setTetromino] = useState<CellType>(CellType.I);
 
   const [boardState, dispatchBoardState] = useBoardState();
@@ -18,11 +18,17 @@ export function useBoard(): TatrisBoard {
 
   const handleGame = (): void => {
     const { cells, tetromino, tetrominoCol, tetrominoRow } = boardState;
-    if (isGameStarted) {
+    /**
+     * Game is started event
+     */
+    if (!isPlaying) {
       // add shape to board,
-      const newShapeType: CellType = getRandomShape();
-      const newShape: Shape = Shapes[newShapeType];
+      const newTetromino: CellType = getRandomShape();
+      setTetromino(newTetromino)
+      setIsPlaying(true)
     }
+
+    
   };
 
   const getRandomShape = (): CellType => {
