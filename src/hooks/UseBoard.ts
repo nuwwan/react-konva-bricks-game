@@ -28,8 +28,12 @@ export function useBoard(): TatrisBoard {
       setIsPlaying(true)
     }
 
-    
+
   };
+
+  const SstartGame=()=>{
+    
+  }
 
   const getRandomShape = (): CellType => {
     const randomId: number = Math.floor(

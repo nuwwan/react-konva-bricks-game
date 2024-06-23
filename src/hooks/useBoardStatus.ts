@@ -71,5 +71,6 @@ const constructInitialBoard = (): BoardState => {
     tetromino: CellType.I,
     tetrominoCol: TETROMINO_ENTER_COL,
     tetrominoRow: TETROMINO_ENTER_ROW,
+    isPlaying:false,
   };
 };

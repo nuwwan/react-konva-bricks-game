@@ -19,6 +19,7 @@ export type BoardState = {
   tetromino: CellType;
   tetrominoCol: number;
   tetrominoRow: number;
+  isPlaying:boolean;
 };
 
 export type Shape = {
