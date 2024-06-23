@@ -1,4 +1,4 @@
-import { Dispatch, useReducer } from "react";
+import { Dispatch, useReducer, useState } from "react";
 import {
   BOARD_HEIGHT,
   BOARD_WIDTH,
