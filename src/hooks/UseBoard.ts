@@ -10,6 +10,7 @@ export function useBoard(): TatrisBoard {
   const [score, setScore] = useState<number>(0);
   const [isCommiting, setIsCommiting] = useState<boolean>(false);
   const [isGameStarted, setIsGameStarted] = useState<boolean>(false);
+  const [tetromino, setTetromino] = useState<CellType>(CellType.I);
 
   const [boardState, dispatchBoardState] = useBoardState();
 
