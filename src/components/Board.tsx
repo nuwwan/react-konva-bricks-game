@@ -1,11 +1,32 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Stage, Layer, Rect } from "react-konva";
 import { BOARD_HEIGHT, BOARD_WIDTH, CELL_SIZE } from "../config/app.config";
-import { Cell } from "../types";
-import { useBoard } from "../hooks/useBoard";
+import { Cell, Direction, TetrominoType } from "../types";
+import { getTetrominoDef } from "../utils/gameFunctions";
 
-const Board: React.FC = () => {
-  const { cells } = useBoard();
+type BoardProps = {
+  cells: Cell[][];
+  tetromino: TetrominoType;
+  tetrominoDirection: Direction;
+  tetrominoCol: number;
+  tetrominoRow: number;
+};
+
+const Board: React.FC<BoardProps> = (props) => {
+  const { cells, tetromino, tetrominoDirection, tetrominoCol, tetrominoRow } =
+    props;
+
+  const [tetrominoDef, setTetrominoDef] = useState<Cell[][] | null>(null);
+
+  useEffect(() => {
+    const tetrisDef = getTetrominoDef(
+      tetromino,
+      tetrominoDirection,
+      tetrominoRow,
+      tetrominoCol
+    );
+    setTetrominoDef(tetrisDef);
+  }, []);
 
   useEffect(() => {
     console.log(cells);

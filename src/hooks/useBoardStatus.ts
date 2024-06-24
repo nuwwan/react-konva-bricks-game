@@ -5,7 +5,7 @@ import {
   TETROMINO_ENTER_COL,
   TETROMINO_ENTER_ROW,
 } from "../config/app.config";
-import { Action, BoardState, Cell, CellType } from "../types";
+import { Action, BoardState, Cell, TetrominoType, Direction } from "../types";
 
 type ActionType = {
   type: Action;
@@ -62,15 +62,18 @@ function boardReducer(state: BoardState, action: ActionType): BoardState {
 }
 
 const constructInitialBoard = (): BoardState => {
-  const emptyCell: Cell = { shape: null };
-  const cells = Array(BOARD_HEIGHT)
+  let emptyCells: Cell[][] = Array(BOARD_HEIGHT)
     .fill(null)
-    .map(() => Array(BOARD_WIDTH).fill(emptyCell));
+    .map((rV, rId) =>
+      Array(BOARD_WIDTH)
+        .fill(null)
+        .map((cV, cId) => ({ shape: null, x: rId, y: cId }))
+    );
   return {
-    cells: cells,
-    tetromino: CellType.I,
+    cells: emptyCells,
+    tetromino: TetrominoType.I,
     tetrominoCol: TETROMINO_ENTER_COL,
     tetrominoRow: TETROMINO_ENTER_ROW,
-    isPlaying:false,
+    tetrominoDirection: Direction.R,
   };
 };
