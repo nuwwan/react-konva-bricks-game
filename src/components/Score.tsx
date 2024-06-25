@@ -2,11 +2,12 @@ type PropType = {
   score: number;
   isPlaying: boolean;
   setIsPlaying: (flag: boolean) => void;
+  startGame: () => void;
 };
 
 const Score: React.FC<PropType> = (props: PropType) => {
   const handleStartOnClick = () => {
-    props.setIsPlaying(true);
+    props.startGame();
   };
   const handleOnPause = () => {
     props.setIsPlaying(false);

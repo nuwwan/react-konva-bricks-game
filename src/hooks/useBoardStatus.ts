@@ -1,4 +1,4 @@
-import { Dispatch, useReducer, useState } from "react";
+import { Dispatch, useReducer } from "react";
 import {
   BOARD_HEIGHT,
   BOARD_WIDTH,
@@ -6,6 +6,7 @@ import {
   TETROMINO_ENTER_ROW,
 } from "../config/app.config";
 import { Action, BoardState, Cell, TetrominoType, Direction } from "../types";
+import { getRandomTetromino, getTetrominoDef } from "../utils/gameFunctions";
 
 type ActionType = {
   type: Action;
@@ -32,7 +33,7 @@ function boardReducer(state: BoardState, action: ActionType): BoardState {
     case Action.moveRight:
       return {
         ...state,
-        tetrominoRow:
+        tetrominoCol:
           state.tetrominoCol < BOARD_WIDTH - 1
             ? state.tetrominoCol + 1
             : state.tetrominoCol,
@@ -45,8 +46,40 @@ function boardReducer(state: BoardState, action: ActionType): BoardState {
       };
 
     case Action.commit:
-      //TODO: commit code here
-      return state;
+      const {
+        cells,
+        tetromino,
+        tetrominoDirection,
+        tetrominoCol,
+        tetrominoRow,
+      } = state;
+      // commit the shape
+      const tetrominoDef: Cell[][] = getTetrominoDef(
+        tetromino,
+        tetrominoDirection,
+        tetrominoRow,
+        tetrominoCol
+      );
+      const newCells: Cell[][] = [...cells];
+      for (const row of tetrominoDef) {
+        for (const tetCell of row) {
+          if (!!tetCell.shape) {
+            newCells[tetCell.y][tetCell.x].shape = tetCell.shape;
+          }
+        }
+      }
+
+      // Get new tetromino
+      const newTetromino: TetrominoType = getRandomTetromino();
+
+      return {
+        ...state,
+        cells: newCells,
+        tetromino: newTetromino,
+        tetrominoCol: TETROMINO_ENTER_COL,
+        tetrominoRow: TETROMINO_ENTER_ROW,
+        tetrominoDirection: Direction.R,
+      };
 
     case Action.rotate:
       // TODO: rotate code here
@@ -64,10 +97,10 @@ function boardReducer(state: BoardState, action: ActionType): BoardState {
 const constructInitialBoard = (): BoardState => {
   let emptyCells: Cell[][] = Array(BOARD_HEIGHT)
     .fill(null)
-    .map((rV, rId) =>
+    .map((rV, y) =>
       Array(BOARD_WIDTH)
         .fill(null)
-        .map((cV, cId) => ({ shape: null, x: rId, y: cId }))
+        .map((cV, x) => ({ shape: null, x: x, y: y }))
     );
   return {
     cells: emptyCells,

@@ -12,6 +12,7 @@ const GamePage: React.FC = () => {
     tetrominoCol,
     tetrominoRow,
     setIsPlaying,
+    startGame,
   } = useBoard();
 
   return (
@@ -22,6 +23,7 @@ const GamePage: React.FC = () => {
             score={score}
             isPlaying={isPlaying}
             setIsPlaying={setIsPlaying}
+            startGame={startGame}
           />
         </div>
         <div>

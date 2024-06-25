@@ -33,6 +33,7 @@ export type BoardState = {
 
 export type Shape = {
   def: number[][];
+  color: string;
 };
 
 export type ShapeObj = {
@@ -46,6 +47,7 @@ export const Shapes: ShapeObj = {
       [1, 0, 0],
       [1, 0, 0],
     ],
+    color: "#0d83cd",
   },
   L: {
     def: [
@@ -53,6 +55,7 @@ export const Shapes: ShapeObj = {
       [1, 0, 0],
       [1, 1, 0],
     ],
+    color: "#0d83cd",
   },
   O: {
     def: [
@@ -60,6 +63,7 @@ export const Shapes: ShapeObj = {
       [1, 1, 0],
       [0, 0, 0],
     ],
+    color: "#0d83cd",
   },
   S: {
     def: [
@@ -67,6 +71,7 @@ export const Shapes: ShapeObj = {
       [1, 1, 0],
       [0, 1, 0],
     ],
+    color: "#0d83cd",
   },
 };
 

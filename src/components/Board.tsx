@@ -4,6 +4,7 @@ import { BOARD_HEIGHT, BOARD_WIDTH, CELL_SIZE } from "../config/app.config";
 import { Cell, Direction, TetrominoType } from "../types";
 import { getTetrominoDef } from "../utils/gameFunctions";
 import Tetromino from "./Tetromino";
+import BoardCell from "./BoardCell";
 
 type BoardProps = {
   cells: Cell[][];
@@ -27,12 +28,8 @@ const Board: React.FC<BoardProps> = (props) => {
       tetrominoCol
     );
     setTetrominoDef(tetrisDef);
-  }, [tetromino,tetrominoRow,tetrominoCol,tetrominoDirection]);
+  }, [tetromino, tetrominoRow, tetrominoCol, tetrominoDirection]);
 
-  useEffect(() => {
-    console.log(tetrominoDef);
-    console.log('row',tetrominoRow);
-  });
   return (
     <>
       <div>
@@ -44,20 +41,12 @@ const Board: React.FC<BoardProps> = (props) => {
             {cells.map((row: Cell[], idY: number) => (
               <>
                 {row.map((cell: Cell, idX: number) => (
-                  <Rect
-                    x={idX * CELL_SIZE}
-                    y={idY * CELL_SIZE}
-                    height={CELL_SIZE}
-                    width={CELL_SIZE}
-                    stroke="black"
-                  />
+                  <BoardCell x={idX} y={idY} cell={cell} />
                 ))}
               </>
             ))}
           </Layer>
-          <Layer>
-            {tetrominoDef && <Tetromino cells={tetrominoDef}/>}
-          </Layer>
+          <Layer>{tetrominoDef && <Tetromino cells={tetrominoDef} />}</Layer>
         </Stage>
       </div>
     </>

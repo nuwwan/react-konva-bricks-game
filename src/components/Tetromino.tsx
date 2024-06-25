@@ -17,7 +17,7 @@ const Tetromino: React.FC<PropType> = (props) => {
               y={cell.y * CELL_SIZE}
               height={CELL_SIZE}
               width={CELL_SIZE}
-              stroke={!!cell.shape? "red":undefined}
+              fill={!!cell.shape ? "#0d83cd" : undefined}
             />
           ))}
         </>

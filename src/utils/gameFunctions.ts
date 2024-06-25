@@ -21,3 +21,16 @@ export const getTetrominoDef = (
   );
   return tetrominoDef;
 };
+
+/**
+ * Returns random Tetromino
+ * @returns TetrominoType
+ */
+export const getRandomTetromino = (): TetrominoType => {
+  const randomId: number = Math.floor(
+    Math.random() * Object.keys(TetrominoType).length
+  );
+  return TetrominoType[
+    Object.keys(TetrominoType)[randomId] as keyof typeof TetrominoType
+  ];
+};

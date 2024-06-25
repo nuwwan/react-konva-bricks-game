@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Action,
   BoardState,
@@ -11,10 +11,12 @@ import {
 } from "../types";
 import { useBoardState } from "./useBoardStatus";
 import { useInterval } from "./useInterval";
-import { getTetrominoDef } from "../utils/gameFunctions";
+import { getRandomTetromino, getTetrominoDef } from "../utils/gameFunctions";
+import { BOARD_HEIGHT, TICK_SPEED } from "../config/app.config";
 
 type TatrisBoard = BoardState & {
   score: number;
+  startGame: () => void;
   isPlaying: boolean;
   setIsPlaying: (flag: boolean) => void;
 };
@@ -24,17 +26,12 @@ export function useBoard(): TatrisBoard {
   const [isCommiting, setIsCommiting] = useState<boolean>(false);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [tetromino, setTetromino] = useState<TetrominoType>(TetrominoType.I);
+  const [tickSpeed, setTickSpeed] = useState<TICK_SPEED>(TICK_SPEED.normal);
+  const [isLeftKeyDown, setIsLeftKeyDown] = useState(false);
+  const [isRightKeyDown, setIsRightKeyDown] = useState(false);
+  const sideBtnIntervalRef = useRef<any>(null);
 
   const [boardState, dispatchBoardState] = useBoardState();
-
-  const handleTick = () => {
-    if (!isPlaying) {
-      return;
-    }
-    return handleDrop();
-  };
-  useInterval(handleTick, 1000);
-  useEffect(() => {}, []);
 
   const handleDrop = (): void => {
     const { cells, tetromino, tetrominoCol, tetrominoRow, tetrominoDirection } =
@@ -42,8 +39,8 @@ export function useBoard(): TatrisBoard {
     const boardAfterDrop: BoardState = {
       cells,
       tetromino,
-      tetrominoCol: tetrominoCol + 1,
-      tetrominoRow,
+      tetrominoCol,
+      tetrominoRow: tetrominoRow + 1,
       tetrominoDirection,
     };
     if (!isCollide(boardAfterDrop)) {
@@ -53,24 +50,91 @@ export function useBoard(): TatrisBoard {
     }
   };
 
+  const handleTick = () => {
+    if (!isPlaying) {
+      return;
+    }
+    return handleDrop();
+  };
+
+  useInterval(handleTick, tickSpeed);
+
+  const handleSideBtnEvent = () => {
+    if (isRightKeyDown) {
+      dispatchBoardState({ type: Action.moveRight });
+    } else if (isLeftKeyDown) {
+      dispatchBoardState({ type: Action.moveLeft });
+    }
+  };
+
+  useEffect(() => {
+    if ((isRightKeyDown || isLeftKeyDown) && !sideBtnIntervalRef.current) {
+      sideBtnIntervalRef.current = setInterval(handleSideBtnEvent, 300);
+    } else if (
+      !isRightKeyDown &&
+      !isLeftKeyDown &&
+      sideBtnIntervalRef.current
+    ) {
+      clearInterval(sideBtnIntervalRef.current);
+      sideBtnIntervalRef.current = null;
+    }
+    return () => {
+      if (sideBtnIntervalRef.current) {
+        sideBtnIntervalRef.current = null;
+      }
+    };
+  }, [isRightKeyDown, isLeftKeyDown]);
+
+  /**
+   * This useEffect registers the event listeners
+   */
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "ArrowDown") {
+        setTickSpeed(TICK_SPEED.fast);
+      }
+      if (event.key === "ArrowUp") {
+      }
+      if (event.key === "ArrowLeft") {
+        setIsLeftKeyDown(true);
+      }
+      if (event.key === "ArrowRight") {
+        setIsRightKeyDown(true);
+      }
+    };
+
+    const handleKeyUp = (event: KeyboardEvent) => {
+      if (event.key === "ArrowDown") {
+        setTickSpeed(TICK_SPEED.normal);
+      }
+      if (event.key === "ArrowUp") {
+      }
+      if (event.key === "ArrowLeft") {
+        setIsLeftKeyDown(false);
+      }
+      if (event.key === "ArrowRight") {
+        setIsRightKeyDown(false);
+      }
+    };
+    // register event listeners
+    document.addEventListener("keydown", handleKeyDown);
+    document.addEventListener("keyup", handleKeyUp);
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+      document.removeEventListener("keyup", handleKeyUp);
+    };
+  }, []);
+
   /**
    * Start the Game
    */
   const startGame = () => {
     // add shape to board,
-    const newTetromino: TetrominoType = getRandomShape();
+    const newTetromino: TetrominoType = getRandomTetromino();
     setTetromino(newTetromino);
     setIsPlaying(true);
     dispatchBoardState({ type: Action.start });
-  };
-
-  const getRandomShape = (): TetrominoType => {
-    const randomId: number = Math.floor(
-      Math.random() * Object.keys(TetrominoType).length
-    );
-    return TetrominoType[
-      Object.keys(TetrominoType)[randomId] as keyof typeof TetrominoType
-    ];
   };
 
   return {
@@ -78,6 +142,7 @@ export function useBoard(): TatrisBoard {
     ...boardState,
     isPlaying: isPlaying,
     setIsPlaying: setIsPlaying,
+    startGame: startGame,
   };
 }
 
@@ -93,7 +158,11 @@ const isCollide = (board: BoardState): boolean => {
     tetrominoRow,
     tetrominoCol
   );
-  return tetrominoDef.every((row) =>
-    row.every((c) => !!c.shape && cells[c.y][c.x].shape == null)
+  return tetrominoDef.some((row) =>
+    row.some((c) =>
+      !!c.shape && c.y == BOARD_HEIGHT
+        ? !!c.shape && c.y == BOARD_HEIGHT
+        : !!c.shape && cells[c.y][c.x].shape != null
+    )
   );
 };
