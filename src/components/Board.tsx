@@ -3,6 +3,7 @@ import { Stage, Layer, Rect } from "react-konva";
 import { BOARD_HEIGHT, BOARD_WIDTH, CELL_SIZE } from "../config/app.config";
 import { Cell, Direction, TetrominoType } from "../types";
 import { getTetrominoDef } from "../utils/gameFunctions";
+import Tetromino from "./Tetromino";
 
 type BoardProps = {
   cells: Cell[][];
@@ -26,10 +27,11 @@ const Board: React.FC<BoardProps> = (props) => {
       tetrominoCol
     );
     setTetrominoDef(tetrisDef);
-  }, []);
+  }, [tetromino,tetrominoRow,tetrominoCol,tetrominoDirection]);
 
   useEffect(() => {
-    console.log(cells);
+    console.log(tetrominoDef);
+    console.log('row',tetrominoRow);
   });
   return (
     <>
@@ -52,6 +54,9 @@ const Board: React.FC<BoardProps> = (props) => {
                 ))}
               </>
             ))}
+          </Layer>
+          <Layer>
+            {tetrominoDef && <Tetromino cells={tetrominoDef}/>}
           </Layer>
         </Stage>
       </div>
