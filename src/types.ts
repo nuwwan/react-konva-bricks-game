@@ -1,32 +1,43 @@
-export enum CellTypes {
+export enum TetrominoType {
   I = "I",
   L = "L",
   O = "O",
   S = "S",
 }
 
+export enum Direction {
+  R = 0,
+  U = 90,
+  L = 180,
+  D = 270,
+}
+
 // Cell type
 // Cell type can be either null or any CellType.
 // Color of the cell will be decided based on the CellType
 export type Cell = {
-  shape: CellTypes | null;
+  shape: TetrominoType | null;
+  x: number;
+  y: number;
 };
 
 // Board type
 // Board has Shape which is moving
 export type BoardState = {
   cells: Cell[][];
-  tetromino: CellTypes;
+  tetromino: TetrominoType;
   tetrominoCol: number;
   tetrominoRow: number;
+  tetrominoDirection: Direction;
 };
 
 export type Shape = {
   def: number[][];
+  color: string;
 };
 
 export type ShapeObj = {
-  [key in CellTypes]: Shape;
+  [key in TetrominoType]: Shape;
 };
 
 export const Shapes: ShapeObj = {
@@ -36,6 +47,7 @@ export const Shapes: ShapeObj = {
       [1, 0, 0],
       [1, 0, 0],
     ],
+    color: "#0d83cd",
   },
   L: {
     def: [
@@ -43,6 +55,7 @@ export const Shapes: ShapeObj = {
       [1, 0, 0],
       [1, 1, 0],
     ],
+    color: "#0d83cd",
   },
   O: {
     def: [
@@ -50,6 +63,7 @@ export const Shapes: ShapeObj = {
       [1, 1, 0],
       [0, 0, 0],
     ],
+    color: "#0d83cd",
   },
   S: {
     def: [
@@ -57,5 +71,16 @@ export const Shapes: ShapeObj = {
       [1, 1, 0],
       [0, 1, 0],
     ],
+    color: "#0d83cd",
   },
 };
+
+export enum Action {
+  start = "START",
+  commit = "COMMIT",
+  drop = "DROP",
+  moveLeft = "LEFT",
+  moveRight = "RIGHT",
+  moveDown = "DOWN",
+  rotate = "ROTATE",
+}
