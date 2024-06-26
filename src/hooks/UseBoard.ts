@@ -1,34 +1,21 @@
 import { useEffect, useRef, useState } from "react";
-import {
-  Action,
-  BoardState,
-  Cell,
-  TetrominoType,
-  Direction,
-  Shape,
-  ShapeObj,
-  Shapes,
-} from "../types";
+import { Action, BoardState, Cell, TetrominoType } from "../types";
 import { useBoardState } from "./useBoardStatus";
 import { useInterval } from "./useInterval";
 import { getRandomTetromino, getTetrominoDef } from "../utils/gameFunctions";
-import { BOARD_HEIGHT, TICK_SPEED } from "../config/app.config";
+import { BOARD_HEIGHT, BOARD_WIDTH, TICK_SPEED } from "../config/app.config";
 
-type TatrisBoard = BoardState & {
+type TatrisBoardProps = BoardState & {
   score: number;
   startGame: () => void;
   isPlaying: boolean;
   setIsPlaying: (flag: boolean) => void;
 };
 
-export function useBoard(): TatrisBoard {
+export function useBoard(): TatrisBoardProps {
   const [score, setScore] = useState<number>(0);
-  const [isCommiting, setIsCommiting] = useState<boolean>(false);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
-  const [tetromino, setTetromino] = useState<TetrominoType>(TetrominoType.I);
   const [tickSpeed, setTickSpeed] = useState<TICK_SPEED>(TICK_SPEED.normal);
-  const [isLeftKeyDown, setIsLeftKeyDown] = useState(false);
-  const [isRightKeyDown, setIsRightKeyDown] = useState(false);
   const sideBtnIntervalRef = useRef<any>(null);
 
   const [boardState, dispatchBoardState] = useBoardState();
@@ -43,63 +30,57 @@ export function useBoard(): TatrisBoard {
       tetrominoRow: tetrominoRow + 1,
       tetrominoDirection,
     };
-    if (!isCollide(boardAfterDrop)) {
+    if (!isPlaying) {
+      return;
+    } else if (!isCollideVertically(boardAfterDrop)) {
       dispatchBoardState({ type: Action.drop });
     } else {
       dispatchBoardState({ type: Action.commit });
     }
   };
 
-  const handleTick = () => {
+  // This will run the drop verticall
+  useInterval(handleDrop, tickSpeed);
+
+  // This will run the move horizontal
+  const handleHorizontalMove = (
+    moveDirection: Action.moveLeft | Action.moveRight
+  ) => {
     if (!isPlaying) {
       return;
     }
-    return handleDrop();
+
+    // run once before set interval: action for single button press
+    dispatchBoardState({ type: moveDirection });
+    sideBtnIntervalRef.current = setInterval(
+      () => dispatchBoardState({ type: moveDirection }),
+      300
+    );
   };
 
-  useInterval(handleTick, tickSpeed);
-
-  const handleSideBtnEvent = () => {
-    if (isRightKeyDown) {
-      dispatchBoardState({ type: Action.moveRight });
-    } else if (isLeftKeyDown) {
-      dispatchBoardState({ type: Action.moveLeft });
-    }
+  const dismountHorizontalMoveInterval = () => {
+    clearInterval(sideBtnIntervalRef.current);
+    sideBtnIntervalRef.current = null;
   };
-
-  useEffect(() => {
-    if ((isRightKeyDown || isLeftKeyDown) && !sideBtnIntervalRef.current) {
-      sideBtnIntervalRef.current = setInterval(handleSideBtnEvent, 300);
-    } else if (
-      !isRightKeyDown &&
-      !isLeftKeyDown &&
-      sideBtnIntervalRef.current
-    ) {
-      clearInterval(sideBtnIntervalRef.current);
-      sideBtnIntervalRef.current = null;
-    }
-    return () => {
-      if (sideBtnIntervalRef.current) {
-        sideBtnIntervalRef.current = null;
-      }
-    };
-  }, [isRightKeyDown, isLeftKeyDown]);
 
   /**
    * This useEffect registers the event listeners
    */
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.repeat) {
+        return;
+      }
       if (event.key === "ArrowDown") {
         setTickSpeed(TICK_SPEED.fast);
       }
       if (event.key === "ArrowUp") {
       }
       if (event.key === "ArrowLeft") {
-        setIsLeftKeyDown(true);
+        handleHorizontalMove(Action.moveLeft);
       }
       if (event.key === "ArrowRight") {
-        setIsRightKeyDown(true);
+        handleHorizontalMove(Action.moveRight);
       }
     };
 
@@ -110,10 +91,10 @@ export function useBoard(): TatrisBoard {
       if (event.key === "ArrowUp") {
       }
       if (event.key === "ArrowLeft") {
-        setIsLeftKeyDown(false);
+        dismountHorizontalMoveInterval();
       }
       if (event.key === "ArrowRight") {
-        setIsRightKeyDown(false);
+        dismountHorizontalMoveInterval();
       }
     };
     // register event listeners
@@ -124,15 +105,12 @@ export function useBoard(): TatrisBoard {
       document.removeEventListener("keydown", handleKeyDown);
       document.removeEventListener("keyup", handleKeyUp);
     };
-  }, []);
+  }, [isPlaying]);
 
   /**
    * Start the Game
    */
   const startGame = () => {
-    // add shape to board,
-    const newTetromino: TetrominoType = getRandomTetromino();
-    setTetromino(newTetromino);
     setIsPlaying(true);
     dispatchBoardState({ type: Action.start });
   };
@@ -149,7 +127,7 @@ export function useBoard(): TatrisBoard {
 /**
  * Check tetromino collides with board cells
  */
-const isCollide = (board: BoardState): boolean => {
+const isCollideVertically = (board: BoardState): boolean => {
   const { cells, tetromino, tetrominoCol, tetrominoRow, tetrominoDirection } =
     board;
   const tetrominoDef: Cell[][] = getTetrominoDef(
@@ -164,5 +142,21 @@ const isCollide = (board: BoardState): boolean => {
         ? !!c.shape && c.y == BOARD_HEIGHT
         : !!c.shape && cells[c.y][c.x].shape != null
     )
+  );
+};
+
+/**
+ * Check if the tetromino collides with board cells.
+ * This method is used when user move left or right.
+ * @param cells
+ * @param tetrominoDef
+ * @returns boolean
+ */
+const isTetrominoCollidesCells = (
+  cells: Cell[][],
+  tetrominoDef: Cell[][]
+): boolean => {
+  return tetrominoDef.some((row) =>
+    row.some((c) => !!c.shape && cells[c.y][c.x].shape != null)
   );
 };
