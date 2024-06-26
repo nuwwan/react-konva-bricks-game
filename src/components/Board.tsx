@@ -41,7 +41,7 @@ const Board: React.FC<BoardProps> = (props) => {
             {cells.map((row: Cell[], idY: number) => (
               <>
                 {row.map((cell: Cell, idX: number) => (
-                  <BoardCell x={idX} y={idY} cell={cell} />
+                  <BoardCell cell={cell} isTetromino={false}/>
                 ))}
               </>
             ))}
