@@ -31,10 +31,17 @@ function boardReducer(state: BoardState, action: ActionType): BoardState {
       return { ...state, tetrominoRow: state.tetrominoRow++ };
 
     case Action.moveRight:
+      const tetroDef: Cell[][] = getTetrominoDef(
+        state.tetromino,
+        state.tetrominoDirection,
+        state.tetrominoRow,
+        state.tetrominoCol
+      );
+      const tetroMaxX = getTetrominoMaxX(tetroDef);
       return {
         ...state,
         tetrominoCol:
-          state.tetrominoCol < BOARD_WIDTH - 1
+          tetroMaxX < BOARD_WIDTH - 1
             ? state.tetrominoCol + 1
             : state.tetrominoCol,
       };
@@ -85,10 +92,6 @@ function boardReducer(state: BoardState, action: ActionType): BoardState {
       // TODO: rotate code here
       return state;
 
-    case Action.moveDown:
-      // TODO: move down code here
-      return state;
-
     default:
       return state;
   }
@@ -102,11 +105,30 @@ const constructInitialBoard = (): BoardState => {
         .fill(null)
         .map((cV, x) => ({ shape: null, x: x, y: y }))
     );
+  const newTetromino: TetrominoType = getRandomTetromino();
   return {
     cells: emptyCells,
-    tetromino: TetrominoType.I,
+    tetromino: newTetromino,
     tetrominoCol: TETROMINO_ENTER_COL,
     tetrominoRow: TETROMINO_ENTER_ROW,
     tetrominoDirection: Direction.R,
   };
+};
+
+/**
+ * Returns the max of x of the tetromino def.
+ * Only the cells with cell type will be considered
+ * @param tetrominoDef
+ * @returns
+ */
+const getTetrominoMaxX = (tetrominoDef: Cell[][]) => {
+  let maxX = 0;
+  for (const row of tetrominoDef) {
+    for (const c of row) {
+      if (!!c.shape && c.x > maxX) {
+        maxX = c.x;
+      }
+    }
+  }
+  return maxX;
 };

@@ -9,8 +9,8 @@ const Score: React.FC<PropType> = (props: PropType) => {
   const handleStartOnClick = () => {
     props.startGame();
   };
-  const handleOnPause = () => {
-    props.setIsPlaying(false);
+  const togglePlayPause = () => {
+    props.setIsPlaying(!props.isPlaying);
   };
 
   return (
@@ -18,7 +18,9 @@ const Score: React.FC<PropType> = (props: PropType) => {
       <div>Score</div>
       <div>{props.score}</div>
       <button onClick={handleStartOnClick}>Start</button>
-      <button onClick={handleOnPause}>Pause</button>
+      <button onClick={togglePlayPause}>
+        {props.isPlaying ? "Pause" : "Play"}
+      </button>
     </div>
   );
 };

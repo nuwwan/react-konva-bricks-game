@@ -40,41 +40,6 @@ export type ShapeObj = {
   [key in TetrominoType]: Shape;
 };
 
-export const Shapes: ShapeObj = {
-  I: {
-    def: [
-      [1, 0, 0],
-      [1, 0, 0],
-      [1, 0, 0],
-    ],
-    color: "#0d83cd",
-  },
-  L: {
-    def: [
-      [1, 0, 0],
-      [1, 0, 0],
-      [1, 1, 0],
-    ],
-    color: "#0d83cd",
-  },
-  O: {
-    def: [
-      [1, 1, 0],
-      [1, 1, 0],
-      [0, 0, 0],
-    ],
-    color: "#0d83cd",
-  },
-  S: {
-    def: [
-      [1, 0, 0],
-      [1, 1, 0],
-      [0, 1, 0],
-    ],
-    color: "#0d83cd",
-  },
-};
-
 export enum Action {
   start = "START",
   commit = "COMMIT",

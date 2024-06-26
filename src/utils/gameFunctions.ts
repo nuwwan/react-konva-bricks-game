@@ -1,5 +1,5 @@
-import { Cell, Direction, Shapes, TetrominoType } from "../types";
-
+import { Cell, Direction, TetrominoType } from "../types";
+import { Shapes } from "../config/shape.config";
 /**
  * This function returns tetromino defination.
  * @returns Cell[3][3]

@@ -9,6 +9,6 @@ export const EMPTY_CELL_STROKE_WIDTH = 0.3;
 
 export enum TICK_SPEED {
   slow = 1200,
-  normal = 1000,
-  fast = 500,
+  normal = 700,
+  fast = 200,
 }
