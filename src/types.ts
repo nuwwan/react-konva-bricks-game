@@ -43,6 +43,7 @@ export type ShapeObj = {
 
 export enum Action {
   start = "START",
+  end = "END",
   commit = "COMMIT",
   drop = "DROP",
   moveLeft = "LEFT",
