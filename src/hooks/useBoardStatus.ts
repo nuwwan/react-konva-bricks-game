@@ -5,8 +5,17 @@ import {
   TETROMINO_ENTER_COL,
   TETROMINO_ENTER_ROW,
 } from "../config/app.config";
-import { Action, BoardState, Cell, TetrominoType, Direction } from "../types";
 import {
+  Action,
+  BoardState,
+  Cell,
+  TetrominoType,
+  Direction,
+  TetroCell,
+} from "../types";
+import {
+  getCompletedRows,
+  getEmptyCellRow,
   getRandomDirection,
   getRandomTetromino,
   getTetrominoDef,
@@ -35,7 +44,7 @@ function boardReducer(state: BoardState, action: ActionType): BoardState {
       return { ...state, tetrominoRow: state.tetrominoRow++ };
 
     case Action.moveRight:
-      const tetroDef: Cell[][] = getTetrominoDef(
+      const tetroDef: TetroCell[][] = getTetrominoDef(
         state.tetromino,
         state.tetrominoDirection,
         state.tetrominoRow,
@@ -78,13 +87,13 @@ function boardReducer(state: BoardState, action: ActionType): BoardState {
         tetrominoRow,
       } = state;
       // commit the shape
-      const tetrominoDef: Cell[][] = getTetrominoDef(
+      const tetrominoDef: TetroCell[][] = getTetrominoDef(
         tetromino,
         tetrominoDirection,
         tetrominoRow,
         tetrominoCol
       );
-      const newCells: Cell[][] = [...cells];
+      let newCells: Cell[][] = [...cells];
       for (const row of tetrominoDef) {
         for (const tetCell of row) {
           if (!!tetCell.shape) {
@@ -92,6 +101,9 @@ function boardReducer(state: BoardState, action: ActionType): BoardState {
           }
         }
       }
+
+      // remove completed rows if available
+      newCells = reArrangeCells(newCells);
 
       // Get new tetromino
       const newTetromino: TetrominoType = getRandomTetromino();
@@ -114,10 +126,10 @@ function boardReducer(state: BoardState, action: ActionType): BoardState {
 const constructInitialBoard = (): BoardState => {
   let emptyCells: Cell[][] = Array(BOARD_HEIGHT)
     .fill(null)
-    .map((rV, y) =>
+    .map(() =>
       Array(BOARD_WIDTH)
         .fill(null)
-        .map((cV, x) => ({ shape: null, x: x, y: y }))
+        .map(() => ({ shape: null }))
     );
   const newTetromino: TetrominoType = getRandomTetromino();
   const newTetrominoDirection: Direction = getRandomDirection();
@@ -136,7 +148,7 @@ const constructInitialBoard = (): BoardState => {
  * @param tetrominoDef
  * @returns
  */
-const getTetrominoMaxX = (tetrominoDef: Cell[][]) => {
+const getTetrominoMaxX = (tetrominoDef: TetroCell[][]) => {
   let maxX = 0;
   for (const row of tetrominoDef) {
     for (const c of row) {
@@ -146,4 +158,25 @@ const getTetrominoMaxX = (tetrominoDef: Cell[][]) => {
     }
   }
   return maxX;
+};
+
+/**
+ * This method will remove the completed rows from the board and
+ * re-arrange the cells by changing the y values.
+ * @param cells
+ * @param completedRows
+ */
+const reArrangeCells = (cells: Cell[][]): Cell[][] => {
+  let cellsAfterFilter = cells.filter((row, idx) => !row.every((c) => c.shape));
+  const removedRowsCount = BOARD_HEIGHT - cellsAfterFilter.length;
+  if (!removedRowsCount) {
+    return cells;
+  }
+  // add empty rows on top to compensate
+  return [
+    ...Array(removedRowsCount)
+      .fill(null)
+      .map((row) => getEmptyCellRow()),
+    ...cellsAfterFilter,
+  ];
 };
