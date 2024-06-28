@@ -43,8 +43,8 @@ export function useBoard(): TatrisBoardProps {
   useInterval(handleDrop, tickSpeed);
 
   // This will run the move horizontal
-  const handleHorizontalMove = (
-    moveDirection: Action.moveLeft | Action.moveRight
+  const handleHorizontalMoveAndRotation = (
+    moveDirection: Action.moveLeft | Action.moveRight | Action.rotate
   ) => {
     if (!isPlaying) {
       return;
@@ -75,12 +75,14 @@ export function useBoard(): TatrisBoardProps {
         setTickSpeed(TICK_SPEED.fast);
       }
       if (event.key === "ArrowUp") {
+        // Rotate tetromino
+        handleHorizontalMoveAndRotation(Action.rotate);
       }
       if (event.key === "ArrowLeft") {
-        handleHorizontalMove(Action.moveLeft);
+        handleHorizontalMoveAndRotation(Action.moveLeft);
       }
       if (event.key === "ArrowRight") {
-        handleHorizontalMove(Action.moveRight);
+        handleHorizontalMoveAndRotation(Action.moveRight);
       }
     };
 
@@ -88,12 +90,14 @@ export function useBoard(): TatrisBoardProps {
       if (event.key === "ArrowDown") {
         setTickSpeed(TICK_SPEED.normal);
       }
-      if (event.key === "ArrowUp") {
-      }
       if (event.key === "ArrowLeft") {
         dismountHorizontalMoveInterval();
       }
       if (event.key === "ArrowRight") {
+        dismountHorizontalMoveInterval();
+      }
+      if (event.key === "ArrowUp") {
+        // Rotate tetromino
         dismountHorizontalMoveInterval();
       }
     };
@@ -140,7 +144,7 @@ const isCollideVertically = (board: BoardState): boolean => {
     row.some((c) =>
       !!c.shape && c.y == BOARD_HEIGHT
         ? !!c.shape && c.y == BOARD_HEIGHT
-        : !!c.shape && cells[c.y][c.x].shape != null
+        : c.y >= 0 && !!c.shape && cells[c.y][c.x].shape != null
     )
   );
 };

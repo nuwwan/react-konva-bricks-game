@@ -11,7 +11,7 @@ export const getTetrominoDef = (
   col: number
 ): Cell[][] => {
   // get the shape def
-  const shapeDef = Shapes[tetromino].def;
+  const shapeDef = Shapes[tetromino].defs[direction];
   const tetrominoDef: Cell[][] = shapeDef.map((rowData, idy) =>
     rowData.map((c, idx) => ({
       shape: !!c ? tetromino : null,

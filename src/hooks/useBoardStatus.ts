@@ -52,6 +52,13 @@ function boardReducer(state: BoardState, action: ActionType): BoardState {
           state.tetrominoCol > 0 ? state.tetrominoCol - 1 : state.tetrominoCol,
       };
 
+    case Action.rotate:
+      return {
+        ...state,
+        tetrominoDirection:
+          state.tetrominoDirection === Direction.H ? Direction.V : Direction.H,
+      };
+
     case Action.commit:
       const {
         cells,
@@ -85,7 +92,7 @@ function boardReducer(state: BoardState, action: ActionType): BoardState {
         tetromino: newTetromino,
         tetrominoCol: TETROMINO_ENTER_COL,
         tetrominoRow: TETROMINO_ENTER_ROW,
-        tetrominoDirection: Direction.R,
+        tetrominoDirection: Direction.H,
       };
 
     case Action.rotate:
@@ -111,7 +118,7 @@ const constructInitialBoard = (): BoardState => {
     tetromino: newTetromino,
     tetrominoCol: TETROMINO_ENTER_COL,
     tetrominoRow: TETROMINO_ENTER_ROW,
-    tetrominoDirection: Direction.R,
+    tetrominoDirection: Direction.H,
   };
 };
 
