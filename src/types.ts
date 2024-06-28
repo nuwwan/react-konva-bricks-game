@@ -18,6 +18,9 @@ export enum Direction {
 // Color of the cell will be decided based on the CellType
 export type Cell = {
   shape: TetrominoType | null;
+};
+
+export type TetroCell = Cell & {
   x: number;
   y: number;
 };

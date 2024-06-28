@@ -14,6 +14,7 @@ const GamePage: React.FC = () => {
     setIsPlaying,
     startGame,
     isGameEnd,
+    clearedRows,
   } = useBoard();
 
   return (
@@ -35,6 +36,7 @@ const GamePage: React.FC = () => {
             tetrominoDirection={tetrominoDirection}
             tetrominoCol={tetrominoCol}
             tetrominoRow={tetrominoRow}
+            clearningRows={clearedRows}
           />
         </div>
       </div>

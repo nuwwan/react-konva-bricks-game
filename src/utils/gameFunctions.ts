@@ -1,5 +1,6 @@
-import { Cell, Direction, TetrominoType } from "../types";
+import { Cell, Direction, TetroCell, TetrominoType } from "../types";
 import { Shapes } from "../config/shape.config";
+import { BOARD_HEIGHT, BOARD_WIDTH } from "../config/app.config";
 /**
  * This function returns tetromino defination.
  * @returns Cell[3][3]
@@ -9,10 +10,10 @@ export const getTetrominoDef = (
   direction: Direction,
   row: number,
   col: number
-): Cell[][] => {
+): TetroCell[][] => {
   // get the shape def
   const shapeDef = Shapes[tetromino].defs[direction];
-  const tetrominoDef: Cell[][] = shapeDef.map((rowData, idy) =>
+  const tetrominoDef: TetroCell[][] = shapeDef.map((rowData, idy) =>
     rowData.map((c, idx) => ({
       shape: !!c ? tetromino : null,
       x: col + idx,
@@ -45,4 +46,30 @@ export const getRandomDirection = (): Direction => {
     Math.random() * Object.keys(Direction).length
   );
   return Direction[Object.keys(Direction)[randomId] as keyof typeof Direction];
+};
+
+/**
+ * Returns the IDs of the Rows going to be cleared
+ * @param cells
+ * @returns rowIDs
+ */
+export const getCompletedRows = (cells: Cell[][]): number[] => {
+  const completedRowsIDs: number[] = [];
+  for (let y = 0; y < BOARD_HEIGHT; y++) {
+    if (cells[y].every((c) => c.shape)) {
+      completedRowsIDs.push(y);
+    }
+  }
+  return completedRowsIDs;
+};
+
+/**
+ * This function will return row of empty cells.
+ * Length will be the BOARD_WIDTH
+ * @returns
+ */
+export const getEmptyCellRow = (): Cell[] => {
+  return Array(BOARD_WIDTH)
+    .fill(null)
+    .map(() => ({ shape: null }));
 };
