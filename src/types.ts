@@ -3,13 +3,14 @@ export enum TetrominoType {
   L = "L",
   O = "O",
   S = "S",
+  Z = "Z",
 }
 
 export enum Direction {
-  R = 0,
-  U = 90,
-  L = 180,
-  D = 270,
+  R = "R",
+  U = "U",
+  L = "L",
+  D = "D",
 }
 
 // Cell type
@@ -32,7 +33,7 @@ export type BoardState = {
 };
 
 export type Shape = {
-  def: number[][];
+  defs: { [key in Direction]: number[][] };
   color: string;
 };
 
@@ -42,6 +43,7 @@ export type ShapeObj = {
 
 export enum Action {
   start = "START",
+  end = "END",
   commit = "COMMIT",
   drop = "DROP",
   moveLeft = "LEFT",

@@ -2,13 +2,14 @@ import { useEffect, useRef, useState } from "react";
 import { Action, BoardState, Cell, TetrominoType } from "../types";
 import { useBoardState } from "./useBoardStatus";
 import { useInterval } from "./useInterval";
-import { getRandomTetromino, getTetrominoDef } from "../utils/gameFunctions";
+import { getTetrominoDef } from "../utils/gameFunctions";
 import { BOARD_HEIGHT, BOARD_WIDTH, TICK_SPEED } from "../config/app.config";
 
 type TatrisBoardProps = BoardState & {
   score: number;
   startGame: () => void;
   isPlaying: boolean;
+  isGameEnd: boolean;
   setIsPlaying: (flag: boolean) => void;
 };
 
@@ -16,6 +17,7 @@ export function useBoard(): TatrisBoardProps {
   const [score, setScore] = useState<number>(0);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [tickSpeed, setTickSpeed] = useState<TICK_SPEED>(TICK_SPEED.normal);
+  const [isGameEnd, setIsGameEnd] = useState<boolean>(false);
   const sideBtnIntervalRef = useRef<any>(null);
 
   const [boardState, dispatchBoardState] = useBoardState();
@@ -35,6 +37,24 @@ export function useBoard(): TatrisBoardProps {
     } else if (!isCollideVertically(boardAfterDrop)) {
       dispatchBoardState({ type: Action.drop });
     } else {
+      handleCommit();
+    }
+  };
+
+  const handleCommit = (): void => {
+    const { tetromino, tetrominoCol, tetrominoRow, tetrominoDirection } =
+      boardState;
+    const tetrominoDef: Cell[][] = getTetrominoDef(
+      tetromino,
+      tetrominoDirection,
+      tetrominoRow,
+      tetrominoCol
+    );
+    // Game ends when the tetromino isn't fully inside the board at commiting,
+    if (!isTetrominoFullyInsideBoard(tetrominoDef)) {
+      setIsGameEnd(true);
+      setIsPlaying(false);
+    } else {
       dispatchBoardState({ type: Action.commit });
     }
   };
@@ -43,8 +63,8 @@ export function useBoard(): TatrisBoardProps {
   useInterval(handleDrop, tickSpeed);
 
   // This will run the move horizontal
-  const handleHorizontalMove = (
-    moveDirection: Action.moveLeft | Action.moveRight
+  const handleHorizontalMoveAndRotation = (
+    moveDirection: Action.moveLeft | Action.moveRight | Action.rotate
   ) => {
     if (!isPlaying) {
       return;
@@ -75,12 +95,14 @@ export function useBoard(): TatrisBoardProps {
         setTickSpeed(TICK_SPEED.fast);
       }
       if (event.key === "ArrowUp") {
+        // Rotate tetromino
+        handleHorizontalMoveAndRotation(Action.rotate);
       }
       if (event.key === "ArrowLeft") {
-        handleHorizontalMove(Action.moveLeft);
+        handleHorizontalMoveAndRotation(Action.moveLeft);
       }
       if (event.key === "ArrowRight") {
-        handleHorizontalMove(Action.moveRight);
+        handleHorizontalMoveAndRotation(Action.moveRight);
       }
     };
 
@@ -88,12 +110,14 @@ export function useBoard(): TatrisBoardProps {
       if (event.key === "ArrowDown") {
         setTickSpeed(TICK_SPEED.normal);
       }
-      if (event.key === "ArrowUp") {
-      }
       if (event.key === "ArrowLeft") {
         dismountHorizontalMoveInterval();
       }
       if (event.key === "ArrowRight") {
+        dismountHorizontalMoveInterval();
+      }
+      if (event.key === "ArrowUp") {
+        // Rotate tetromino
         dismountHorizontalMoveInterval();
       }
     };
@@ -112,6 +136,7 @@ export function useBoard(): TatrisBoardProps {
    */
   const startGame = () => {
     setIsPlaying(true);
+    setIsGameEnd(false);
     dispatchBoardState({ type: Action.start });
   };
 
@@ -121,6 +146,7 @@ export function useBoard(): TatrisBoardProps {
     isPlaying: isPlaying,
     setIsPlaying: setIsPlaying,
     startGame: startGame,
+    isGameEnd: isGameEnd,
   };
 }
 
@@ -140,7 +166,7 @@ const isCollideVertically = (board: BoardState): boolean => {
     row.some((c) =>
       !!c.shape && c.y == BOARD_HEIGHT
         ? !!c.shape && c.y == BOARD_HEIGHT
-        : !!c.shape && cells[c.y][c.x].shape != null
+        : c.y >= 0 && !!c.shape && cells[c.y][c.x].shape != null
     )
   );
 };
@@ -159,4 +185,13 @@ const isTetrominoCollidesCells = (
   return tetrominoDef.some((row) =>
     row.some((c) => !!c.shape && cells[c.y][c.x].shape != null)
   );
+};
+
+/**
+ * Check if the tetromino fully inside the board.
+ * This function is used when commiting the tetromino.
+ * @param tetrominoDef
+ */
+const isTetrominoFullyInsideBoard = (tetrominoDef: Cell[][]): boolean => {
+  return tetrominoDef.every((row) => row.every((c) => c.y >= 0));
 };

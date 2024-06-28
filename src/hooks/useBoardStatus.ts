@@ -6,7 +6,11 @@ import {
   TETROMINO_ENTER_ROW,
 } from "../config/app.config";
 import { Action, BoardState, Cell, TetrominoType, Direction } from "../types";
-import { getRandomTetromino, getTetrominoDef } from "../utils/gameFunctions";
+import {
+  getRandomDirection,
+  getRandomTetromino,
+  getTetrominoDef,
+} from "../utils/gameFunctions";
 
 type ActionType = {
   type: Action;
@@ -52,6 +56,19 @@ function boardReducer(state: BoardState, action: ActionType): BoardState {
           state.tetrominoCol > 0 ? state.tetrominoCol - 1 : state.tetrominoCol,
       };
 
+    case Action.rotate:
+      return {
+        ...state,
+        tetrominoDirection:
+          state.tetrominoDirection === Direction.R
+            ? Direction.U
+            : state.tetrominoDirection === Direction.U
+            ? Direction.L
+            : state.tetrominoDirection === Direction.L
+            ? Direction.D
+            : Direction.R,
+      };
+
     case Action.commit:
       const {
         cells,
@@ -78,6 +95,7 @@ function boardReducer(state: BoardState, action: ActionType): BoardState {
 
       // Get new tetromino
       const newTetromino: TetrominoType = getRandomTetromino();
+      const newTetrominoDirection: Direction = getRandomDirection();
 
       return {
         ...state,
@@ -85,12 +103,8 @@ function boardReducer(state: BoardState, action: ActionType): BoardState {
         tetromino: newTetromino,
         tetrominoCol: TETROMINO_ENTER_COL,
         tetrominoRow: TETROMINO_ENTER_ROW,
-        tetrominoDirection: Direction.R,
+        tetrominoDirection: newTetrominoDirection,
       };
-
-    case Action.rotate:
-      // TODO: rotate code here
-      return state;
 
     default:
       return state;
@@ -106,12 +120,13 @@ const constructInitialBoard = (): BoardState => {
         .map((cV, x) => ({ shape: null, x: x, y: y }))
     );
   const newTetromino: TetrominoType = getRandomTetromino();
+  const newTetrominoDirection: Direction = getRandomDirection();
   return {
     cells: emptyCells,
     tetromino: newTetromino,
     tetrominoCol: TETROMINO_ENTER_COL,
     tetrominoRow: TETROMINO_ENTER_ROW,
-    tetrominoDirection: Direction.R,
+    tetrominoDirection: newTetrominoDirection,
   };
 };
 

@@ -1,4 +1,4 @@
-import { ShapeObj } from "../types";
+import { Direction, ShapeObj } from "../types";
 // A shape can be defined as a 2D arrayBuffer. Each element represents a brick
 // in desired shapes.
 // 1 : Brick is presented.
@@ -6,35 +6,128 @@ import { ShapeObj } from "../types";
 
 export const Shapes: ShapeObj = {
   I: {
-    def: [
-      [1, 0, 0],
-      [1, 0, 0],
-      [1, 0, 0],
-    ],
+    defs: {
+      [Direction.R]: [
+        [1, 1, 1],
+        [0, 0, 0],
+        [0, 0, 0],
+      ],
+      [Direction.U]: [
+        [1, 0, 0],
+        [1, 0, 0],
+        [1, 0, 0],
+      ],
+      [Direction.L]: [
+        [1, 1, 1],
+        [0, 0, 0],
+        [0, 0, 0],
+      ],
+      [Direction.D]: [
+        [1, 0, 0],
+        [1, 0, 0],
+        [1, 0, 0],
+      ],
+    },
     color: "#02B894",
   },
   L: {
-    def: [
-      [1, 0, 0],
-      [1, 0, 0],
-      [1, 1, 0],
-    ],
+    defs: {
+      [Direction.R]: [
+        [1, 1, 1],
+        [1, 0, 0],
+        [0, 0, 0],
+      ],
+      [Direction.U]: [
+        [1, 0, 0],
+        [1, 0, 0],
+        [1, 1, 0],
+      ],
+      [Direction.L]: [
+        [0, 0, 1],
+        [1, 1, 1],
+        [0, 0, 0],
+      ],
+      [Direction.D]: [
+        [1, 1, 0],
+        [0, 1, 0],
+        [0, 1, 0],
+      ],
+    },
     color: "#18A0FB",
   },
   O: {
-    def: [
-      [1, 1, 0],
-      [1, 1, 0],
-      [0, 0, 0],
-    ],
+    defs: {
+      [Direction.R]: [
+        [1, 1, 0],
+        [1, 1, 0],
+        [0, 0, 0],
+      ],
+      [Direction.U]: [
+        [1, 1, 0],
+        [1, 1, 0],
+        [0, 0, 0],
+      ],
+      [Direction.L]: [
+        [1, 1, 0],
+        [1, 1, 0],
+        [0, 0, 0],
+      ],
+      [Direction.D]: [
+        [1, 1, 0],
+        [1, 1, 0],
+        [0, 0, 0],
+      ],
+    },
     color: "#f96534",
   },
   S: {
-    def: [
-      [1, 0, 0],
-      [1, 1, 0],
-      [0, 1, 0],
-    ],
+    defs: {
+      [Direction.R]: [
+        [0, 1, 1],
+        [1, 1, 0],
+        [0, 0, 0],
+      ],
+      [Direction.U]: [
+        [1, 0, 0],
+        [1, 1, 0],
+        [0, 1, 0],
+      ],
+      [Direction.L]: [
+        [0, 1, 1],
+        [1, 1, 0],
+        [0, 0, 0],
+      ],
+      [Direction.D]: [
+        [1, 0, 0],
+        [1, 1, 0],
+        [0, 1, 0],
+      ],
+    },
     color: "#3579a3",
+  },
+  Z: {
+    defs: {
+      [Direction.R]: [
+        [1, 1, 0],
+        [0, 1, 1],
+        [0, 0, 0],
+      ],
+      [Direction.U]: [
+        [0, 1, 0],
+        [1, 1, 0],
+        [1, 0, 0],
+      ],
+      [Direction.L]: [
+        [1, 1, 0],
+        [0, 1, 1],
+        [0, 0, 0],
+      ],
+      [Direction.D]: [
+        [0, 1, 0],
+        [1, 1, 0],
+        [1, 0, 0],
+      ],
+    },
+    color: "red",
   },
 };
