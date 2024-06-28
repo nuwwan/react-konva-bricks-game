@@ -7,42 +7,72 @@ import { Direction, ShapeObj } from "../types";
 export const Shapes: ShapeObj = {
   I: {
     defs: {
-      [Direction.H]: [
+      [Direction.R]: [
+        [1, 1, 1],
+        [0, 0, 0],
+        [0, 0, 0],
+      ],
+      [Direction.U]: [
         [1, 0, 0],
         [1, 0, 0],
         [1, 0, 0],
       ],
-      [Direction.V]: [
+      [Direction.L]: [
         [1, 1, 1],
         [0, 0, 0],
         [0, 0, 0],
+      ],
+      [Direction.D]: [
+        [1, 0, 0],
+        [1, 0, 0],
+        [1, 0, 0],
       ],
     },
     color: "#02B894",
   },
   L: {
     defs: {
-      [Direction.H]: [
+      [Direction.R]: [
+        [1, 1, 1],
+        [1, 0, 0],
+        [0, 0, 0],
+      ],
+      [Direction.U]: [
         [1, 0, 0],
         [1, 0, 0],
         [1, 1, 0],
       ],
-      [Direction.V]: [
+      [Direction.L]: [
         [0, 0, 1],
         [1, 1, 1],
         [0, 0, 0],
+      ],
+      [Direction.D]: [
+        [1, 1, 0],
+        [0, 1, 0],
+        [0, 1, 0],
       ],
     },
     color: "#18A0FB",
   },
   O: {
     defs: {
-      [Direction.H]: [
+      [Direction.R]: [
         [1, 1, 0],
         [1, 1, 0],
         [0, 0, 0],
       ],
-      [Direction.V]: [
+      [Direction.U]: [
+        [1, 1, 0],
+        [1, 1, 0],
+        [0, 0, 0],
+      ],
+      [Direction.L]: [
+        [1, 1, 0],
+        [1, 1, 0],
+        [0, 0, 0],
+      ],
+      [Direction.D]: [
         [1, 1, 0],
         [1, 1, 0],
         [0, 0, 0],
@@ -52,30 +82,50 @@ export const Shapes: ShapeObj = {
   },
   S: {
     defs: {
-      [Direction.H]: [
+      [Direction.R]: [
+        [0, 1, 1],
+        [1, 1, 0],
+        [0, 0, 0],
+      ],
+      [Direction.U]: [
         [1, 0, 0],
         [1, 1, 0],
         [0, 1, 0],
       ],
-      [Direction.V]: [
+      [Direction.L]: [
         [0, 1, 1],
         [1, 1, 0],
         [0, 0, 0],
+      ],
+      [Direction.D]: [
+        [1, 0, 0],
+        [1, 1, 0],
+        [0, 1, 0],
       ],
     },
     color: "#3579a3",
   },
   Z: {
     defs: {
-      [Direction.H]: [
+      [Direction.R]: [
+        [1, 1, 0],
+        [0, 1, 1],
+        [0, 0, 0],
+      ],
+      [Direction.U]: [
         [0, 1, 0],
         [1, 1, 0],
         [1, 0, 0],
       ],
-      [Direction.V]: [
+      [Direction.L]: [
         [1, 1, 0],
-        [0, 1, 0],
         [0, 1, 1],
+        [0, 0, 0],
+      ],
+      [Direction.D]: [
+        [0, 1, 0],
+        [1, 1, 0],
+        [1, 0, 0],
       ],
     },
     color: "red",

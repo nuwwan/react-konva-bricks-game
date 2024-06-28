@@ -7,8 +7,10 @@ export enum TetrominoType {
 }
 
 export enum Direction {
-  H = "H",
-  V = "V",
+  R = "R",
+  U = "U",
+  L = "L",
+  D = "D",
 }
 
 // Cell type

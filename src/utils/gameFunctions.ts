@@ -34,3 +34,15 @@ export const getRandomTetromino = (): TetrominoType => {
     Object.keys(TetrominoType)[randomId] as keyof typeof TetrominoType
   ];
 };
+
+/**
+ * Get Random Direction
+ * @returns Direction
+ */
+
+export const getRandomDirection = (): Direction => {
+  const randomId: number = Math.floor(
+    Math.random() * Object.keys(Direction).length
+  );
+  return Direction[Object.keys(Direction)[randomId] as keyof typeof Direction];
+};
