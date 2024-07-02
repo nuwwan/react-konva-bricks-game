@@ -65,7 +65,7 @@ export function useBoard(): TatrisBoardProps {
     }
   };
 
-  // This will run the drop verticall
+  // This will run the drop vertical
   useInterval(handleDrop, tickSpeed);
 
   // This will run the move horizontal
@@ -78,10 +78,12 @@ export function useBoard(): TatrisBoardProps {
 
     // run once before set interval: action for single button press
     dispatchBoardState({ type: moveDirection });
-    sideBtnIntervalRef.current = setInterval(
-      () => dispatchBoardState({ type: moveDirection }),
-      300
-    );
+    if(!!!sideBtnIntervalRef.current){
+      sideBtnIntervalRef.current = setInterval(
+        () => dispatchBoardState({ type: moveDirection }),
+        300
+      );
+    }
   };
 
   const dismountHorizontalMoveInterval = () => {

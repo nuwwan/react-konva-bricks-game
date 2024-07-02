@@ -130,4 +130,29 @@ export const Shapes: ShapeObj = {
     },
     color: "red",
   },
+  T: {
+    defs: {
+      [Direction.R]: [
+        [0, 1, 0],
+        [1, 1, 0],
+        [0, 1, 0],
+      ],
+      [Direction.U]: [
+        [1, 1, 1],
+        [0, 1, 0],
+        [0, 0, 0],
+      ],
+      [Direction.L]: [
+        [1, 0, 0],
+        [1, 1, 0],
+        [1, 0, 0],
+      ],
+      [Direction.D]: [
+        [0, 1, 0],
+        [1, 1, 1],
+        [0, 0, 0],
+      ],
+    },
+    color: "blue",
+  },
 };

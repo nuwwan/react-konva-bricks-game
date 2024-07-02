@@ -18,7 +18,7 @@ const BoardCell: React.FC<PropsType> = (props) => {
       y={props.y * CELL_SIZE}
       height={CELL_SIZE}
       width={CELL_SIZE}
-      stroke={!props.cellType ? "black" : undefined}
+      stroke={!props.cellType && !props.isTetromino ? "black" : undefined}
       strokeWidth={EMPTY_CELL_STROKE_WIDTH}
       fill={!!props.cellType ? Shapes[props.cellType].color : undefined}
     />

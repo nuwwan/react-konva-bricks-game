@@ -4,6 +4,7 @@ export enum TetrominoType {
   O = "O",
   S = "S",
   Z = "Z",
+  T = "T",
 }
 
 export enum Direction {
