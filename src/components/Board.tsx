@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Stage, Layer } from "react-konva";
 import { BOARD_HEIGHT, BOARD_WIDTH, CELL_SIZE } from "../config/app.config";
 import { Cell, Direction, TetroCell, TetrominoType } from "../types";
-import { getTetrominoDef } from "../utils/gameFunctions";
 import Tetromino from "./Tetromino";
 import BoardCell from "./BoardCell";
+import ClearingRow from "./ClearingRow";
 
 type BoardProps = {
   cells: Cell[][];
@@ -13,23 +13,11 @@ type BoardProps = {
   tetrominoCol: number;
   tetrominoRow: number;
   clearningRows: number[];
+  tetroDef?: TetroCell[][];
 };
 
 const Board: React.FC<BoardProps> = (props) => {
-  const { cells, tetromino, tetrominoDirection, tetrominoCol, tetrominoRow } =
-    props;
-
-  const [tetrominoDef, setTetrominoDef] = useState<TetroCell[][] | null>(null);
-
-  useEffect(() => {
-    const tetrisDef = getTetrominoDef(
-      tetromino,
-      tetrominoDirection,
-      tetrominoRow,
-      tetrominoCol
-    );
-    setTetrominoDef(tetrisDef);
-  }, [tetromino, tetrominoRow, tetrominoCol, tetrominoDirection]);
+  const { cells, tetroDef, clearningRows } = props;
 
   return (
     <>
@@ -52,7 +40,11 @@ const Board: React.FC<BoardProps> = (props) => {
               </>
             ))}
           </Layer>
-          <Layer>{tetrominoDef && <Tetromino cells={tetrominoDef} />}</Layer>
+          <Layer>{tetroDef && <Tetromino cells={tetroDef} />}</Layer>
+          <Layer>
+            {clearningRows &&
+              clearningRows.map((idY) => <ClearingRow rowId={idY} />)}
+          </Layer>
         </Stage>
       </div>
     </>

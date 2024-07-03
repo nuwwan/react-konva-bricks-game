@@ -1,27 +1,11 @@
 import { Cell, Direction, TetroCell, TetrominoType } from "../types";
 import { Shapes } from "../config/shape.config";
-import { BOARD_HEIGHT, BOARD_WIDTH } from "../config/app.config";
-/**
- * This function returns tetromino defination.
- * @returns Cell[3][3]
- */
-export const getTetrominoDef = (
-  tetromino: TetrominoType,
-  direction: Direction,
-  row: number,
-  col: number
-): TetroCell[][] => {
-  // get the shape def
-  const shapeDef = Shapes[tetromino].defs[direction];
-  const tetrominoDef: TetroCell[][] = shapeDef.map((rowData, idy) =>
-    rowData.map((c, idx) => ({
-      shape: !!c ? tetromino : null,
-      x: col + idx,
-      y: row + idy,
-    }))
-  );
-  return tetrominoDef;
-};
+import {
+  BOARD_HEIGHT,
+  BOARD_WIDTH,
+  TETROMINO_ENTER_COL,
+  TETROMINO_ENTER_ROW,
+} from "../config/app.config";
 
 /**
  * Returns random Tetromino
@@ -72,4 +56,62 @@ export const getEmptyCellRow = (): Cell[] => {
   return Array(BOARD_WIDTH)
     .fill(null)
     .map(() => ({ shape: null }));
+};
+
+export const getRandomTetro = (): TetroCell[][] => {
+  // 1. Get random tetro type
+  const tetroType: TetrominoType = getRandomTetromino();
+  // 2. Get random direction
+  const randomDirection: Direction = getRandomDirection();
+  // 3. Get shape
+  const shape: number[][] = Shapes[tetroType].defs[randomDirection];
+  // 3. Get tetro definition
+  return shape.map((row, idY) =>
+    row.map((c, idX) => ({
+      x: TETROMINO_ENTER_COL + idX,
+      y: TETROMINO_ENTER_ROW + idY,
+      shape: c ? tetroType : null,
+    }))
+  );
+};
+
+/**
+ * Returns Tetro for given params
+ * @param x
+ * @param y
+ * @param tetroType
+ * @param direction
+ * @returns
+ */
+export const getTetroDefFor = (
+  x: number,
+  y: number,
+  tetroType: TetrominoType,
+  direction: Direction
+): TetroCell[][] => {
+  const shape: number[][] = Shapes[tetroType].defs[direction];
+  return shape.map((row, idY) =>
+    row.map((c, idX) => ({
+      x: x + idX,
+      y: y + idY,
+      shape: c ? tetroType : null,
+    }))
+  );
+};
+
+/**
+ * Return the adjucent next direction for a given direction
+ * @param currentDirection
+ * @returns
+ */
+export const getRotatedTetroDirection = (
+  currentDirection: Direction
+): Direction => {
+  return currentDirection === Direction.R
+    ? Direction.U
+    : currentDirection === Direction.U
+    ? Direction.L
+    : currentDirection === Direction.L
+    ? Direction.D
+    : Direction.R;
 };

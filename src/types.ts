@@ -54,4 +54,5 @@ export enum Action {
   moveRight = "RIGHT",
   moveDown = "DOWN",
   rotate = "ROTATE",
+  clearRow = "CLEAR",
 }

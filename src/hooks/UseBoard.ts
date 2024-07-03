@@ -1,9 +1,13 @@
 import { useEffect, useRef, useState } from "react";
-import { Action, BoardState, Cell, TetroCell, TetrominoType } from "../types";
-import { useBoardState } from "./useBoardStatus";
+import { Action, BoardState, TetroCell } from "../types";
+import {
+  BOARD_WIDTH,
+  CELL_BREAK_SCORE,
+  TICK_SPEED,
+} from "../config/app.config";
 import { useInterval } from "./useInterval";
-import { getCompletedRows, getTetrominoDef } from "../utils/gameFunctions";
-import { BOARD_HEIGHT, TICK_SPEED } from "../config/app.config";
+import { getCompletedRows, getTetroDefFor } from "../utils/gameFunctions";
+import { useBoardState } from "./useBoardState";
 
 type TatrisBoardProps = BoardState & {
   score: number;
@@ -12,84 +16,44 @@ type TatrisBoardProps = BoardState & {
   isGameEnd: boolean;
   setIsPlaying: (flag: boolean) => void;
   clearedRows: number[];
+  tetro?: TetroCell[][];
 };
 
 export function useBoard(): TatrisBoardProps {
+  const [boardState, dispatchBoardState] = useBoardState();
+  const { cells, tetromino, tetrominoCol, tetrominoRow, tetrominoDirection } =
+    boardState;
+
   const [score, setScore] = useState<number>(0);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [tickSpeed, setTickSpeed] = useState<TICK_SPEED>(TICK_SPEED.normal);
   const [isGameEnd, setIsGameEnd] = useState<boolean>(false);
   const [clearedRows, setClearedRows] = useState<number[]>([]);
+  const [tetro, setTetro] = useState<TetroCell[][]>();
   const sideBtnIntervalRef = useRef<any>(null);
 
-  const [boardState, dispatchBoardState] = useBoardState();
-
-  const handleDrop = (): void => {
-    const { cells, tetromino, tetrominoCol, tetrominoRow, tetrominoDirection } =
-      boardState;
-    const boardAfterDrop: BoardState = {
-      cells,
-      tetromino,
+  useEffect(() => {
+    // Set tetro definition when the params change
+    const newTetro: TetroCell[][] = getTetroDefFor(
       tetrominoCol,
-      tetrominoRow: tetrominoRow + 1,
-      tetrominoDirection,
-    };
-    if (!isPlaying) {
-      return;
-    } else if (!isCollideVertically(boardAfterDrop)) {
-      dispatchBoardState({ type: Action.drop });
-    } else {
-      handleCommit();
-    }
-  };
-
-  const handleCommit = (): void => {
-    const { cells, tetromino, tetrominoCol, tetrominoRow, tetrominoDirection } =
-      boardState;
-    const tetrominoDef: TetroCell[][] = getTetrominoDef(
-      tetromino,
-      tetrominoDirection,
       tetrominoRow,
-      tetrominoCol
+      tetromino,
+      tetrominoDirection
     );
+    setTetro(newTetro);
+  }, [tetromino, tetrominoCol, tetrominoRow, tetrominoDirection]);
+
+  useEffect(() => {
+    // handle Cells change
     const clearingRows: number[] = getCompletedRows(cells);
     if (clearingRows.length) {
       setClearedRows(clearingRows);
-    }
-    // Game ends when the tetromino isn't fully inside the board at commiting,
-    if (!isTetrominoFullyInsideBoard(tetrominoDef)) {
-      setIsGameEnd(true);
-      setIsPlaying(false);
+      setTimeout(() => dispatchBoardState({ type: Action.clearRow }), 500);
+      setScore(score + CELL_BREAK_SCORE * BOARD_WIDTH * clearingRows.length);
     } else {
-      dispatchBoardState({ type: Action.commit });
+      setClearedRows([]);
     }
-  };
-
-  // This will run the drop vertical
-  useInterval(handleDrop, tickSpeed);
-
-  // This will run the move horizontal
-  const handleHorizontalMoveAndRotation = (
-    moveDirection: Action.moveLeft | Action.moveRight | Action.rotate
-  ) => {
-    if (!isPlaying) {
-      return;
-    }
-
-    // run once before set interval: action for single button press
-    dispatchBoardState({ type: moveDirection });
-    if(!!!sideBtnIntervalRef.current){
-      sideBtnIntervalRef.current = setInterval(
-        () => dispatchBoardState({ type: moveDirection }),
-        300
-      );
-    }
-  };
-
-  const dismountHorizontalMoveInterval = () => {
-    clearInterval(sideBtnIntervalRef.current);
-    sideBtnIntervalRef.current = null;
-  };
+  }, [cells]);
 
   /**
    * This useEffect registers the event listeners
@@ -103,7 +67,6 @@ export function useBoard(): TatrisBoardProps {
         setTickSpeed(TICK_SPEED.fast);
       }
       if (event.key === "ArrowUp") {
-        // Rotate tetromino
         handleHorizontalMoveAndRotation(Action.rotate);
       }
       if (event.key === "ArrowLeft") {
@@ -125,7 +88,6 @@ export function useBoard(): TatrisBoardProps {
         dismountHorizontalMoveInterval();
       }
       if (event.key === "ArrowUp") {
-        // Rotate tetromino
         dismountHorizontalMoveInterval();
       }
     };
@@ -138,6 +100,44 @@ export function useBoard(): TatrisBoardProps {
       document.removeEventListener("keyup", handleKeyUp);
     };
   }, [isPlaying]);
+
+  const handleDrop = (): void => {
+    if (!isPlaying) {
+      return;
+    }
+
+    return dispatchBoardState({ type: Action.drop });
+  };
+
+  // This will run the move horizontal
+  const handleHorizontalMoveAndRotation = (
+    moveDirection: Action.moveLeft | Action.moveRight | Action.rotate
+  ) => {
+    if (!isPlaying) {
+      return;
+    }
+
+    performAction(() => dispatchBoardState({ type: moveDirection }));
+  };
+
+  const performAction = (action: () => void) => {
+    // run once before set interval: action for single button press
+    action();
+    if (!!!sideBtnIntervalRef.current) {
+      sideBtnIntervalRef.current = setInterval(
+        () => action(),
+        TICK_SPEED.sideMoveRotate
+      );
+    }
+  };
+
+  const dismountHorizontalMoveInterval = () => {
+    clearInterval(sideBtnIntervalRef.current);
+    sideBtnIntervalRef.current = null;
+  };
+
+  // This will run the drop vertical
+  useInterval(handleDrop, tickSpeed);
 
   /**
    * Start the Game
@@ -156,51 +156,6 @@ export function useBoard(): TatrisBoardProps {
     startGame: startGame,
     isGameEnd: isGameEnd,
     clearedRows: clearedRows,
+    tetro: tetro,
   };
 }
-
-/**
- * Check tetromino collides with board cells
- */
-const isCollideVertically = (board: BoardState): boolean => {
-  const { cells, tetromino, tetrominoCol, tetrominoRow, tetrominoDirection } =
-    board;
-  const tetrominoDef: TetroCell[][] = getTetrominoDef(
-    tetromino,
-    tetrominoDirection,
-    tetrominoRow,
-    tetrominoCol
-  );
-  return tetrominoDef.some((row) =>
-    row.some((c) =>
-      !!c.shape && c.y == BOARD_HEIGHT
-        ? !!c.shape && c.y == BOARD_HEIGHT
-        : c.y >= 0 && !!c.shape && cells[c.y][c.x].shape != null
-    )
-  );
-};
-
-// /**
-//  * Check if the tetromino collides with board cells.
-//  * This method is used when user move left or right.
-//  * @param cells
-//  * @param tetrominoDef
-//  * @returns boolean
-//  */
-// const isTetrominoCollidesCells = (
-//   cells: Cell[][],
-//   tetrominoDef: Cell[][]
-// ): boolean => {
-//   return tetrominoDef.some((row) =>
-//     row.some((c) => !!c.shape && cells[c.y][c.x].shape != null)
-//   );
-// };
-
-/**
- * Check if the tetromino fully inside the board.
- * This function is used when commiting the tetromino.
- * @param tetrominoDef
- */
-const isTetrominoFullyInsideBoard = (tetrominoDef: TetroCell[][]): boolean => {
-  return tetrominoDef.every((row) => row.every((c) => c.y >= 0));
-};
