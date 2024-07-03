@@ -4,6 +4,7 @@ export enum TetrominoType {
   O = "O",
   S = "S",
   Z = "Z",
+  T = "T",
 }
 
 export enum Direction {
@@ -18,6 +19,9 @@ export enum Direction {
 // Color of the cell will be decided based on the CellType
 export type Cell = {
   shape: TetrominoType | null;
+};
+
+export type TetroCell = Cell & {
   x: number;
   y: number;
 };
@@ -50,4 +54,5 @@ export enum Action {
   moveRight = "RIGHT",
   moveDown = "DOWN",
   rotate = "ROTATE",
+  clearRow = "CLEAR",
 }
