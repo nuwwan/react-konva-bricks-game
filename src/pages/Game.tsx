@@ -20,26 +20,28 @@ const GamePage: React.FC = () => {
 
   return (
     <div>
-      <div style={{ width: 1000, margin: "auto" }}>
+      <div style={{ display: "flex", justifyContent: "center" }}>
         <div>
-          <Score
-            score={score}
-            isPlaying={isPlaying}
-            setIsPlaying={setIsPlaying}
-            startGame={startGame}
-            isGameEnd={isGameEnd}
-          />
-        </div>
-        <div>
-          <Board
-            cells={cells}
-            tetromino={tetromino}
-            tetrominoDirection={tetrominoDirection}
-            tetrominoCol={tetrominoCol}
-            tetrominoRow={tetrominoRow}
-            clearningRows={clearedRows}
-            tetroDef={tetro}
-          />
+          <div>
+            <Score
+              score={score}
+              isPlaying={isPlaying}
+              setIsPlaying={setIsPlaying}
+              startGame={startGame}
+              isGameEnd={isGameEnd}
+            />
+          </div>
+          <div>
+            <Board
+              cells={cells}
+              tetromino={tetromino}
+              tetrominoDirection={tetrominoDirection}
+              tetrominoCol={tetrominoCol}
+              tetrominoRow={tetrominoRow}
+              clearningRows={clearedRows}
+              tetroDef={tetro}
+            />
+          </div>
         </div>
       </div>
     </div>
