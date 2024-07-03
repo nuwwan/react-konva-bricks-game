@@ -1,5 +1,5 @@
 import Board from "../components/Board";
-import Score from "../components/Score";
+import Dashboard from "../components/dashboard/Dashboard";
 import { useBoard } from "../hooks/useBoard";
 
 const GamePage: React.FC = () => {
@@ -11,7 +11,7 @@ const GamePage: React.FC = () => {
     tetrominoDirection,
     tetrominoCol,
     tetrominoRow,
-    setIsPlaying,
+    togglePlayPause,
     startGame,
     isGameEnd,
     clearedRows,
@@ -23,10 +23,10 @@ const GamePage: React.FC = () => {
       <div style={{ display: "flex", justifyContent: "center" }}>
         <div>
           <div>
-            <Score
+            <Dashboard
               score={score}
               isPlaying={isPlaying}
-              setIsPlaying={setIsPlaying}
+              togglePlayPause={togglePlayPause}
               startGame={startGame}
               isGameEnd={isGameEnd}
             />

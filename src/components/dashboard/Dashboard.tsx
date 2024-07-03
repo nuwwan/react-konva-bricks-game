@@ -1,0 +1,35 @@
+import ControlSection from "../ControlSection";
+import Score from "./Score";
+import UpComingTetris from "./UpComingTetro";
+
+type PropType = {
+  score: number;
+  isPlaying: boolean;
+  isGameEnd: boolean;
+  startGame: () => void;
+  togglePlayPause: () => void;
+};
+
+const Dashboard: React.FC<PropType> = (props) => {
+  return (
+    <div>
+      <div style={{ display: "flex" }}>
+        <div style={{ width: "33%" }}>
+          <Score score={props.score} />
+        </div>
+        <div style={{ width: "33%" }}>
+          <UpComingTetris next={[]} />
+        </div>
+        <div style={{ width: "33%" }}>
+          <ControlSection
+            isPlaying={props.isPlaying}
+            startGame={props.startGame}
+            togglePlay={props.togglePlayPause}
+            isGameEnd={props.isGameEnd}
+          />
+        </div>
+      </div>
+    </div>
+  );
+};
+export default Dashboard;
