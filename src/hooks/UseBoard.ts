@@ -14,7 +14,7 @@ type TatrisBoardProps = BoardState & {
   startGame: () => void;
   isPlaying: boolean;
   isGameEnd: boolean;
-  setIsPlaying: (flag: boolean) => void;
+  togglePlayPause: () => void;
   clearedRows: number[];
   tetro?: TetroCell[][];
 };
@@ -148,11 +148,15 @@ export function useBoard(): TatrisBoardProps {
     dispatchBoardState({ type: Action.start });
   };
 
+  const togglePlayPause = () => {
+    setIsPlaying(!isPlaying);
+  };
+
   return {
     score: score,
     ...boardState,
     isPlaying: isPlaying,
-    setIsPlaying: setIsPlaying,
+    togglePlayPause: togglePlayPause,
     startGame: startGame,
     isGameEnd: isGameEnd,
     clearedRows: clearedRows,
