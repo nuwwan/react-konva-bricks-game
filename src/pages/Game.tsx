@@ -1,6 +1,6 @@
 import Board from "../components/Board";
 import Dashboard from "../components/dashboard/Dashboard";
-import { useBoard } from "../hooks/useBoard";
+import { useBoard } from "../hooks/UseBoard";
 
 const GamePage: React.FC = () => {
   const {
@@ -16,6 +16,7 @@ const GamePage: React.FC = () => {
     isGameEnd,
     clearedRows,
     tetro,
+    tetrominoQueue,
   } = useBoard();
 
   return (
@@ -29,6 +30,7 @@ const GamePage: React.FC = () => {
               togglePlayPause={togglePlayPause}
               startGame={startGame}
               isGameEnd={isGameEnd}
+              tetrominoQueue={tetrominoQueue}
             />
           </div>
           <div>

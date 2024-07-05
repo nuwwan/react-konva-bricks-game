@@ -5,6 +5,7 @@ import {
   Cell,
   Direction,
   TetroCell,
+  TetrominoMetaType,
   TetrominoType,
 } from "../types";
 import {
@@ -23,13 +24,6 @@ import {
 
 type ActionType = {
   type: Action;
-};
-
-type GetTetrominoMetaType = {
-  tetromino: TetrominoType;
-  tetrominoCol: number;
-  tetrominoRow: number;
-  tetrominoDirection: Direction;
 };
 
 export function useBoardState(): [BoardState, Dispatch<ActionType>] {
@@ -68,8 +62,15 @@ function boardReducer(state: BoardState, action: ActionType): BoardState {
           tetroBeforeDrop,
           state.cells
         );
-        const newTetro: GetTetrominoMetaType = getRandomTetro();
-        return { ...state, cells: cellsAfterCommit, ...newTetro };
+        const { enqueueTetro, tetrominoQueue } = enQueueFromTetroQueue(
+          state.tetrominoQueue
+        );
+        return {
+          ...state,
+          cells: cellsAfterCommit,
+          ...enqueueTetro,
+          tetrominoQueue: tetrominoQueue,
+        };
       }
       return { ...state, tetrominoRow: state.tetrominoRow++ };
 
@@ -139,8 +140,15 @@ function boardReducer(state: BoardState, action: ActionType): BoardState {
           tetroBeforeRotate,
           state.cells
         );
-        const newTetro: GetTetrominoMetaType = getRandomTetro();
-        return { ...state, cells: cellsAfterCommit, ...newTetro };
+        const { enqueueTetro, tetrominoQueue } = enQueueFromTetroQueue(
+          state.tetrominoQueue
+        );
+        return {
+          ...state,
+          cells: cellsAfterCommit,
+          ...enqueueTetro,
+          tetrominoQueue: tetrominoQueue,
+        };
       }
       return {
         ...state,
@@ -168,12 +176,14 @@ const constructInitialBoard = (): BoardState => {
     );
   const newTetromino: TetrominoType = getRandomTetromino();
   const newTetrominoDirection: Direction = getRandomDirection();
+  const tetroQueue: TetrominoMetaType[] = getUpcomingTetroQueue();
   return {
     cells: emptyCells,
     tetromino: newTetromino,
     tetrominoCol: TETROMINO_ENTER_COL,
     tetrominoRow: TETROMINO_ENTER_ROW,
     tetrominoDirection: newTetrominoDirection,
+    tetrominoQueue: tetroQueue,
   };
 };
 
@@ -259,7 +269,7 @@ const commitTetro = (tetro: TetroCell[][], cells: Cell[][]): Cell[][] => {
  * Returns required data for new tetromino
  * @returns
  */
-const getRandomTetro = (): GetTetrominoMetaType => {
+const getRandomTetro = (): TetrominoMetaType => {
   const newTetromino: TetrominoType = getRandomTetromino();
   const newTetrominoDirection: Direction = getRandomDirection();
   return {
@@ -268,4 +278,25 @@ const getRandomTetro = (): GetTetrominoMetaType => {
     tetrominoRow: TETROMINO_ENTER_ROW,
     tetrominoDirection: newTetrominoDirection,
   };
+};
+
+/**
+ * Get the upcoming tetro queue.
+ * @returns
+ */
+const getUpcomingTetroQueue = (): TetrominoMetaType[] => {
+  return Array(3)
+    .fill(null)
+    .map(() => getRandomTetro());
+};
+
+const enQueueFromTetroQueue = (
+  queue: TetrominoMetaType[]
+): { tetrominoQueue: TetrominoMetaType[]; enqueueTetro: TetrominoMetaType } => {
+  let tetroQueue = [...queue];
+  const newTetro: TetrominoMetaType = getRandomTetro();
+
+  const enqueuedTetro: TetrominoMetaType = tetroQueue.shift() || newTetro;
+  const newTetroQueue: TetrominoMetaType[] = [...tetroQueue, newTetro];
+  return { tetrominoQueue: newTetroQueue, enqueueTetro: enqueuedTetro };
 };

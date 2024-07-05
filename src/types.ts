@@ -34,6 +34,7 @@ export type BoardState = {
   tetrominoCol: number;
   tetrominoRow: number;
   tetrominoDirection: Direction;
+  tetrominoQueue: TetrominoMetaType[];
 };
 
 export type Shape = {
@@ -56,3 +57,10 @@ export enum Action {
   rotate = "ROTATE",
   clearRow = "CLEAR",
 }
+
+export type TetrominoMetaType = {
+  tetromino: TetrominoType;
+  tetrominoCol: number;
+  tetrominoRow: number;
+  tetrominoDirection: Direction;
+};

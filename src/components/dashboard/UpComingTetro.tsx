@@ -1,11 +1,17 @@
-import { TetrominoType } from "../../types";
+import { TetrominoMetaType } from "../../types";
 
 type PropsType = {
-  next: TetrominoType[];
+  next: TetrominoMetaType[];
 };
 
 const UpComingTetris: React.FC<PropsType> = (props) => {
-  return <div>Upcoming Tetris</div>;
+  return (
+    <div>
+      {props.next.toReversed().map((tetro) => (
+        <p>{tetro.tetromino}</p>
+      ))}
+    </div>
+  );
 };
 
 export default UpComingTetris;
