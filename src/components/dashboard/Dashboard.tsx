@@ -1,3 +1,4 @@
+import { TetrominoMetaType } from "../../types";
 import ControlSection from "../ControlSection";
 import Score from "./Score";
 import UpComingTetris from "./UpComingTetro";
@@ -8,6 +9,7 @@ type PropType = {
   isGameEnd: boolean;
   startGame: () => void;
   togglePlayPause: () => void;
+  tetrominoQueue: TetrominoMetaType[];
 };
 
 const Dashboard: React.FC<PropType> = (props) => {
@@ -18,7 +20,7 @@ const Dashboard: React.FC<PropType> = (props) => {
           <Score score={props.score} />
         </div>
         <div style={{ width: "33%" }}>
-          <UpComingTetris next={[]} />
+          <UpComingTetris next={props.tetrominoQueue} />
         </div>
         <div style={{ width: "33%" }}>
           <ControlSection

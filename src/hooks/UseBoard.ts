@@ -21,8 +21,14 @@ type TatrisBoardProps = BoardState & {
 
 export function useBoard(): TatrisBoardProps {
   const [boardState, dispatchBoardState] = useBoardState();
-  const { cells, tetromino, tetrominoCol, tetrominoRow, tetrominoDirection } =
-    boardState;
+  const {
+    cells,
+    tetromino,
+    tetrominoCol,
+    tetrominoRow,
+    tetrominoDirection,
+    tetrominoQueue,
+  } = boardState;
 
   const [score, setScore] = useState<number>(0);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
@@ -161,5 +167,6 @@ export function useBoard(): TatrisBoardProps {
     isGameEnd: isGameEnd,
     clearedRows: clearedRows,
     tetro: tetro,
+    tetrominoQueue: tetrominoQueue,
   };
 }
