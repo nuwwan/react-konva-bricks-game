@@ -5,7 +5,7 @@ export const BOARD_HEIGHT = 20;
 export const TETROMINO_ENTER_COL = 6;
 export const TETROMINO_ENTER_ROW = -3;
 
-export const EMPTY_CELL_STROKE_WIDTH = 0.3;
+export const EMPTY_CELL_STROKE_WIDTH = 0.2;
 
 export enum TICK_SPEED {
   sideMoveRotate = 200,
