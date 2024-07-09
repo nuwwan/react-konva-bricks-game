@@ -128,7 +128,7 @@ export const Shapes: ShapeObj = {
         [1, 0, 0],
       ],
     },
-    color: "red",
+    color: "#b549fd",
   },
   T: {
     defs: {
@@ -153,6 +153,6 @@ export const Shapes: ShapeObj = {
         [0, 0, 0],
       ],
     },
-    color: "blue",
+    color: "#fdf149",
   },
 };
