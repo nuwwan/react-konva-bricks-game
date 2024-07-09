@@ -16,13 +16,13 @@ const Dashboard: React.FC<PropType> = (props) => {
   return (
     <div>
       <div style={{ display: "flex" }}>
-        <div style={{ width: "33%" }}>
+        <div style={{ width: 232 }}>
           <Score score={props.score} />
         </div>
-        <div style={{ width: "33%" }}>
+        <div style={{ width: 60 }}>
           <UpComingTetris next={props.tetrominoQueue} />
         </div>
-        <div style={{ width: "33%" }}>
+        <div style={{ width: 232 }}>
           <ControlSection
             isPlaying={props.isPlaying}
             startGame={props.startGame}
