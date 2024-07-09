@@ -130,10 +130,7 @@ export function useBoard(): TatrisBoardProps {
     // run once before set interval: action for single button press
     action();
     if (!!!sideBtnIntervalRef.current) {
-      sideBtnIntervalRef.current = setInterval(
-        () => action(),
-        TICK_SPEED.sideMoveRotate
-      );
+      sideBtnIntervalRef.current = setInterval(() => action(), TICK_SPEED.fast);
     }
   };
 
