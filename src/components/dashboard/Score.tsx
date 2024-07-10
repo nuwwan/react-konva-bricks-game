@@ -11,9 +11,11 @@ const Score: React.FC<PropType> = (props: PropType) => {
 
   return (
     <div>
-      <div>Score</div>
+      <div style={{ marginBottom: 50, textAlign: "center" }}>Score</div>
       <div style={{ height: 70, fontSize: "xxx-large" }}>
-        <p>{formatScore(props.score)}</p>
+        <p style={{ margin: "auto", textAlign: "center" }}>
+          {formatScore(props.score)}
+        </p>
       </div>
     </div>
   );
