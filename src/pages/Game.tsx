@@ -1,4 +1,4 @@
-import Board from "../components/Board";
+import Board from "../components/board/Board";
 import Dashboard from "../components/dashboard/Dashboard";
 import { useBoard } from "../hooks/UseBoard";
 

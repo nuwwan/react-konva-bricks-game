@@ -1,8 +1,8 @@
 import React from "react";
 import { Rect } from "react-konva";
-import { CELL_SIZE, EMPTY_CELL_STROKE_WIDTH } from "../config/app.config";
-import { TetrominoType } from "../types";
-import { Shapes } from "../config/shape.config";
+import { CELL_SIZE, EMPTY_CELL_STROKE_WIDTH } from "../../config/app.config";
+import { TetrominoType } from "../../types";
+import { Shapes } from "../../config/shape.config";
 
 type PropsType = {
   cellType: TetrominoType | null;

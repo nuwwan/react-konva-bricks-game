@@ -5,8 +5,8 @@ import {
   BOARD_WIDTH,
   CELL_SIZE,
   EMPTY_CELL_STROKE_WIDTH,
-} from "../config/app.config";
-import { Cell, Direction, TetroCell, TetrominoType } from "../types";
+} from "../../config/app.config";
+import { Cell, Direction, TetroCell, TetrominoType } from "../../types";
 import Tetromino from "./Tetromino";
 import BoardCell from "./BoardCell";
 import ClearingRow from "./ClearingRow";

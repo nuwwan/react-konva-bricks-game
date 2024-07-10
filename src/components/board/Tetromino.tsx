@@ -1,4 +1,4 @@
-import { TetroCell } from "../types";
+import { TetroCell } from "../../types";
 import BoardCell from "./BoardCell";
 
 type PropType = {
