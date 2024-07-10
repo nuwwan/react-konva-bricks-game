@@ -13,7 +13,7 @@ const Section: React.FC<PropType> = ({ children }) => {
         marginBottom: 10,
         border: "1px solid #0505050f",
         borderRadius: 5,
-        padding:10
+        padding: 10,
       }}
     >
       {children}
