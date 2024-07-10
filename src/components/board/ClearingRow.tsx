@@ -1,5 +1,5 @@
 import { Rect } from "react-konva";
-import { BOARD_WIDTH, CELL_SIZE } from "../config/app.config";
+import { BOARD_WIDTH, CELL_SIZE } from "../../config/app.config";
 import { useEffect, useRef } from "react";
 
 type PropsType = {
